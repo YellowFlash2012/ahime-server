@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose'
 import { config } from 'dotenv';
 import products from './data/products.js';
 
@@ -22,6 +23,19 @@ app.get('/api/products/:id', (req, res) => {
 
 const PORT=process.env.PORT || 5000
 
-app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV} mode | Port ${PORT}`);
-})
+
+// database connection algo
+mongoose
+    .connect(process.env.MONGO_URI)
+    .then(
+        app.listen(PORT, () => {
+            console.log(
+                `Server running in ${process.env.NODE_ENV} mode | Port ${PORT}`
+            );
+
+            console.log("DB connected!");
+        })
+    )
+    .catch((err) => {
+        console.log(err);
+    });
