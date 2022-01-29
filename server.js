@@ -1,5 +1,6 @@
 import express from 'express';
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
+import colors from 'colors';
 import { config } from 'dotenv';
 import products from './data/products.js';
 
@@ -30,12 +31,12 @@ mongoose
     .then(
         app.listen(PORT, () => {
             console.log(
-                `Server running in ${process.env.NODE_ENV} mode | Port ${PORT}`
+                `Server running in ${process.env.NODE_ENV} mode | Port ${PORT}`.yellow.bold
             );
 
-            console.log("DB connected!");
+            console.log("DB connected!".cyan.underline.bold);
         })
     )
     .catch((err) => {
-        console.log(err);
+        console.log(err.red.bold);
     });
