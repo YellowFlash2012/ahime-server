@@ -9,8 +9,8 @@
     "server": "nodemon server.js",
     "client": "npm start --prefix ahime-client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "data:import":"node seeders.js",
-    "data:destroy":"node seeders.js -d"
+    "data:import": "node seeders.js",
+    "data:destroy": "node seeders.js -d"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
     "concurrently": "^7.0.0",
     "dotenv": "^14.3.2",
     "express": "^4.17.2",
+    "express-async-handler": "^1.2.0",
     "mongoose": "^6.1.8",
     "nodemon": "^2.0.15"
   }
