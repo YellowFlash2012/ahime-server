@@ -8,7 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon server.js",
     "client": "npm start --prefix ahime-client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "data:import":"node seeders.js",
+    "data:destroy":"node seeders.js -d"
   },
   "repository": {
     "type": "git",
