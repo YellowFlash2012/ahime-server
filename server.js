@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import { notFound, errorHandler } from './middlewares/errorMiddlewares.js';
 import colors from 'colors';
 import { config } from 'dotenv';
 import productRoutes from './routes/products.js';
@@ -13,6 +14,12 @@ app.get('/', (req, res) => {
 })
 
 app.use("/api/products", productRoutes);
+
+// custom middleware for NOT FOUND error handling
+app.use(notFound)
+
+// custom middleware for error handling
+app.use(errorHandler)
 
 const PORT=process.env.PORT || 5000
 
