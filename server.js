@@ -4,16 +4,21 @@ import { notFound, errorHandler } from './middlewares/errorMiddlewares.js';
 import colors from 'colors';
 import { config } from 'dotenv';
 import productRoutes from './routes/products.js';
+import userRoutes from './routes/users.js';
 
 config();
 
 const app = express();
+
+// to accept json data
+app.use(express.json())
 
 app.get('/', (req, res) => {
     res.send('API is running');
 })
 
 app.use("/api/products", productRoutes);
+app.use("/api/users", userRoutes);
 
 // custom middleware for NOT FOUND error handling
 app.use(notFound)
