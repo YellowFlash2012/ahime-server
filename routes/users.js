@@ -49,4 +49,40 @@ router.get("/profile", protect, asyncHandler(async (req, res) => {
     }
 }))
 
+// @desc    Auth user & get token
+// @route   POST /api/users/login
+// @access  Public
+router.post("/register", asyncHandler(async (req, res) => {
+    const { name, email, password } = req.body;
+
+    // check if user exists
+    const userExists = await Users.findOne({ email: email });
+
+    if (userExists) {
+        res.status(400);
+        throw new Error('A user with that email already exists!')
+    } 
+
+    // create a new user
+    const user = await Users.create({
+        name,
+        email,
+        password
+    })
+
+    if (user) {
+        res.status(201).json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            token: generateToken(user._id),
+        });
+    } else {
+        res.status(400)
+        throw new Error('The data you entered are not correct. Please try again!')
+    }
+    
+}))
+
 export default router;

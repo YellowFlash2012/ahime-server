@@ -27,9 +27,20 @@ const userSchema = mongoose.Schema(
     }
 );
 
+// *****hashing the pw for the login route****
 userSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 }
+
+// *****hashing the password for the register route***
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) {
+        next();
+    }
+
+    const salt = await bcrypt.genSalt(12);
+    this.password = await bcrypt.hash(this.password, salt);
+})
 
 const Users = mongoose.model("Users", userSchema);
 
