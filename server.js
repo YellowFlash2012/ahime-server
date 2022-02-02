@@ -5,6 +5,7 @@ import colors from 'colors';
 import { config } from 'dotenv';
 import productRoutes from './routes/products.js';
 import userRoutes from './routes/users.js';
+import orderRoutes from './routes/orders.js';
 
 config();
 
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/orders", orderRoutes);
 
 // custom middleware for NOT FOUND error handling
 app.use(notFound)
