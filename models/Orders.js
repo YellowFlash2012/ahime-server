@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
 
-const reviewSchema = mongoose.Schema(
-    {
-        name: { type: String, required: true },
-        rating: { type: Number, required: true },
-        comment: { type: String, required: true },
-    },
-    {
-        timestamps: true,
-    }
-);
+// const reviewSchema = mongoose.Schema(
+//     {
+//         name: { type: String, required: true },
+//         rating: { type: Number, required: true },
+//         comment: { type: String, required: true },
+//     },
+//     {
+//         timestamps: true,
+//     }
+// );
 
 const orderSchema = mongoose.Schema(
     {
@@ -20,10 +20,10 @@ const orderSchema = mongoose.Schema(
         },
         orderItems: [
             {
-                name: { type: String, rquired: true },
-                qty: { type: Number, rquired: true },
-                price: { type: String, rquired: true },
-                price: { type: Number, rquired: true },
+                name: { type: String, required: true },
+                qty: { type: Number, required: true },
+                image: { type: String, required: true },
+                price: { type: Number, required: true },
                 product: {
                     type: mongoose.Schema.Types.ObjectId,
                     required: true,
@@ -47,17 +47,17 @@ const orderSchema = mongoose.Schema(
             update_time: { type: String },
             email_address: { type: String },
         },
-        taxPrice: {
+        taxAmount: {
             type: Number,
             required: true,
             default: 0.0,
         },
-        shippingPrice: {
+        shippingAmount: {
             type: Number,
             required: true,
             default: 0.0,
         },
-        totalPrice: {
+        totalAmount: {
             type: Number,
             required: true,
             default: 0.0,

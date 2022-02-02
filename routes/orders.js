@@ -24,8 +24,8 @@ router.post(
 
         if (orderItems && orderItems.length === 0) {
             res.status(400);
-            throw new Error("No error items");
-            return;
+            throw new Error("No order items");
+            return
         } else {
             const order = new Orders({
                 orderItems,
@@ -42,6 +42,26 @@ router.post(
 
             res.status(201).json(createdOrder);
         }
+    })
+);
+
+// @desc    Get order by ID
+// @route   GET /api/orders/:id
+// @access  Private
+router.get(
+    "/:id",
+    protect,
+    asyncHandler(async (req, res) => {
+        
+        const order = await Orders.findById(req.params.id).populate('user', 'name email');
+
+        if (order) {
+            res.json(order);
+        } else {
+            res.status(404);
+            throw new Error('Order not found!');
+        }
+
     })
 );
 
