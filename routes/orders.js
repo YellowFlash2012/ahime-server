@@ -6,45 +6,23 @@ import { protect } from "../middlewares/authMiddleware.js";
 import Orders from "../models/Orders.js";
 const router = express.Router();
 
-// @desc    create new order
-// @route   POST /api/orders
+// @desc    Get logged in user orders
+// @route   GET /api/orders/myorders
 // @access  Private
-router.post(
-    "/",
+router.get(
+    "/myorders",
     protect,
     asyncHandler(async (req, res) => {
-        const {
-            orderItems,
-            shippingAddress,
-            paymentMethod,
-            itemsPrice,
-            taxAmount,
-            shippingAmount,
-            totalAmount,
-        } = req.body;
 
-        if (orderItems && orderItems.length === 0) {
-            res.status(400);
-            throw new Error("No order items");
-            return
-        } else {
-            const order = new Orders({
-                orderItems,
-                user: req.user._id,
-                shippingAddress,
-                paymentMethod,
-                itemsPrice,
-                taxAmount,
-                shippingAmount,
-                totalAmount,
-            });
+        const orders = await Orders.find({ user: req.user._id });
 
-            const createdOrder = await order.save();
+        // console.log(req.user._id);
 
-            res.status(201).json(createdOrder);
-        }
+        res.json(orders);
+
     })
 );
+
 
 // @desc    Get order by ID
 // @route   GET /api/orders/:id
@@ -54,7 +32,9 @@ router.get(
     protect,
     asyncHandler(async (req, res) => {
 
-        const order = await Orders.findById(req.params.id).populate('user', 'name email');
+        // let id = ObjectId(_id).valueOf();
+
+        const order = await Orders.findById(req.params['id']).populate('user', 'name email');
 
         // console.log(new ObjectId(req.params));
 
@@ -100,6 +80,46 @@ router.put(
             throw new Error('Order not found!');
         }
 
+    })
+);
+
+// @desc    create new order
+// @route   POST /api/orders
+// @access  Private
+router.post(
+    "/",
+    protect,
+    asyncHandler(async (req, res) => {
+        const {
+            orderItems,
+            shippingAddress,
+            paymentMethod,
+            itemsPrice,
+            taxAmount,
+            shippingAmount,
+            totalAmount,
+        } = req.body;
+
+        if (orderItems && orderItems.length === 0) {
+            res.status(400);
+            throw new Error("No order items");
+            return
+        } else {
+            const order = new Orders({
+                orderItems,
+                user: req.user._id,
+                shippingAddress,
+                paymentMethod,
+                itemsPrice,
+                taxAmount,
+                shippingAmount,
+                totalAmount,
+            });
+
+            const createdOrder = await order.save();
+
+            res.status(201).json(createdOrder);
+        }
     })
 );
 
