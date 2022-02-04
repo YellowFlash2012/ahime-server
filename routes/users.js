@@ -125,4 +125,21 @@ router.get("/", protect, admin, asyncHandler(async (req, res) => {
     res.json(users);
 }))
 
+// @desc    Delete user
+// @route   DELETE /api/users/:id
+// @access  Private/Admin Only
+router.delete("/:id", protect, admin, asyncHandler(async (req, res) => {
+
+    const user = await Users.findById(req.params.id);
+
+    if (user) {
+        await user.remove();
+        res.json({message:'User removed'});
+    } else {
+        res.status(404);
+        throw new Error('User not found');
+    }
+    
+}))
+
 export default router;
