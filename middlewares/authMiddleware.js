@@ -29,8 +29,15 @@ const protect = asyncHandler(async (req, res, next) => {
         throw new Error('Area 51: Do not trespass!!')
     }
     
-
-    
 })
 
-export { protect };
+const admin = (req, res, next) => {
+    if (req.user && req.user.isAdmin) {
+        next();
+    } else {
+        res.status(401);
+        throw new Error("Only the Admin can do that!");
+    }
+};
+
+export { protect, admin };

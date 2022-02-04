@@ -1,7 +1,7 @@
 
 import express from "express";
 import asyncHandler from "express-async-handler";
-import { protect } from "../middlewares/authMiddleware.js";
+import { admin, protect } from "../middlewares/authMiddleware.js";
 import Users from "../models/Users.js";
 import generateToken from "../utils/generateToken.js";
 const router = express.Router();
@@ -114,6 +114,15 @@ router.post("/register", asyncHandler(async (req, res) => {
         throw new Error('The data you entered are not correct. Please try again!')
     }
     
+}))
+
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private/Admin Only
+router.get("/", protect, admin, asyncHandler(async (req, res) => {
+
+    const users = await Users.find({});
+    res.json(users);
 }))
 
 export default router;
