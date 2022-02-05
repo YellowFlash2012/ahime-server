@@ -1,5 +1,6 @@
 
 import express from "express";
+import mongoose from 'mongoose';
 import asyncHandler from "express-async-handler";
 import { admin, protect } from "../middlewares/authMiddleware.js";
 import Users from "../models/Users.js";
@@ -116,14 +117,7 @@ router.post("/register", asyncHandler(async (req, res) => {
     
 }))
 
-// @desc    Get all users
-// @route   GET /api/users
-// @access  Private/Admin Only
-router.get("/", protect, admin, asyncHandler(async (req, res) => {
 
-    const users = await Users.find({});
-    res.json(users);
-}))
 
 // @desc    Delete user
 // @route   DELETE /api/users/:id
@@ -170,12 +164,30 @@ router.put("/:id", protect, admin, asyncHandler(async (req, res) => {
     }
 }))
 
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private/Admin Only
+router.get("/", protect, admin, asyncHandler(async (req, res) => {
+
+    const users = await Users.find({});
+    res.json(users);
+}))
+
+
 // @desc    Get user by id
 // @route   GET /api/users/:id
 // @access  Private/Admin Only
 router.get("/:id", protect, admin, asyncHandler(async (req, res) => {
 
-    const user = await Users.findById(req.params.id).select('-password');
+    // let id = req.params.id;
+
+    // if (id.match(/^[0-9a-fA-F]{24}$/)) {
+    //     next();
+    // }
+
+    const user = await Users.findById(req.params.id).select("-password");
+
+    console.log(req.params.id);
 
     if (user) {
         res.json(user);
@@ -183,7 +195,6 @@ router.get("/:id", protect, admin, asyncHandler(async (req, res) => {
         res.status(404);
         throw new Error("User not found");
     }
-    
 }))
 
 export default router;

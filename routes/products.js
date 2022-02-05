@@ -29,4 +29,21 @@ router.get("/:id", asyncHandler(async(req, res) => {
 
 }));
 
+// @desc    delete a product
+// @route   DELETE /api/products/:id
+// @access  Private/Admin
+router.delete("/:id", protect, admin, asyncHandler(async(req, res) => {
+    const product = await Products.findById(req.params.id);
+
+    if (product) {
+        await product.remove();
+
+        res.json({message:'Product removed!'});
+    } else {
+        res.status(404)
+        throw new Error('Product not found!')
+    }
+
+}));
+
 export default router;
