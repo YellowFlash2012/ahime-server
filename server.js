@@ -2,6 +2,7 @@ import path from 'path';
 
 import express from 'express';
 import mongoose from 'mongoose';
+import morgan from 'morgan'
 import { notFound, errorHandler } from './middlewares/errorMiddlewares.js';
 import colors from 'colors';
 import { config } from 'dotenv';
@@ -13,6 +14,11 @@ import uploadRoute from './routes/uploadRoute.js'
 config();
 
 const app = express();
+
+// to get an overvie of http verbs involved in a FE req
+if (process.env.NODE_ENV === "development") {
+    app.use(morgan('dev'))
+}
 
 // to accept json data
 app.use(express.json())
