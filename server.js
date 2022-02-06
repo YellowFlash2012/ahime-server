@@ -1,3 +1,5 @@
+import path from 'path';
+
 import express from 'express';
 import mongoose from 'mongoose';
 import { notFound, errorHandler } from './middlewares/errorMiddlewares.js';
@@ -6,6 +8,7 @@ import { config } from 'dotenv';
 import productRoutes from './routes/products.js';
 import userRoutes from './routes/users.js';
 import orderRoutes from './routes/orders.js';
+import uploadRoute from './routes/uploadRoute.js'
 
 config();
 
@@ -21,10 +24,16 @@ app.get('/', (req, res) => {
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/upload", uploadRoute);
 
 app.get('/api/config/paypal', (req, res) => {
     res.send(process.env.PAYPAL_CLIENT_ID);
 });
+
+// to make the upload folder not available
+const __dirname = path.resolve();
+
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // custom middleware for NOT FOUND error handling
 app.use(notFound)
