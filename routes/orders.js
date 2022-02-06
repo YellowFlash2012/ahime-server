@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 
 import asyncHandler from "express-async-handler";
-import { protect } from "../middlewares/authMiddleware.js";
+import { admin, protect } from "../middlewares/authMiddleware.js";
 import Orders from "../models/Orders.js";
 const router = express.Router();
 
@@ -120,6 +120,21 @@ router.post(
 
             res.status(201).json(createdOrder);
         }
+    })
+);
+
+// @desc    Get all orders
+// @route   GET /api/orders/
+// @access  Private/Admin
+router.get(
+    "/",
+    protect, admin,
+    asyncHandler(async (req, res) => {
+
+        const orders = await Orders.find({}).populate('user', 'id name');
+
+        res.json(orders);
+
     })
 );
 
