@@ -7,21 +7,36 @@ const router = express.Router();
 
 import Products from '../models/Products.js'
 
+// @desc    get top rated products
+// @route   GET /api/products/top
+// @access  Public
+router.get("/top", asyncHandler(async(req, res) => {
+    const products = await Products.find({}).sort({ rating: -1 }).limit(3);
+
+    res.json(products);
+}));
+
 // @desc    fetch all products
 // @route   GET /api/products
 // @access  Public
 router.get("/", asyncHandler(async (req, res) => {
-    // req.query to get anything qfter the ? in the url
+    // pagination
+    const numofPages = 10;
+    const page = +(req.query.pageNumber) || 1;
+
+    // req.query to get anything qfter the ? in the url - search box functionality
     const keyword = req.query.keyword ? {
         name: {
             $regex: req.query.keyword,
             $options: 'i'
         }
     } : {};
-    const products = await Products.find({...keyword});
+
+    const count = await Products.countDocuments({ ...keyword });
+    const products = await Products.find({ ...keyword }).limit(numofPages).skip(numofPages * (page - 1));
     // {} to indicate all
 
-    res.json(products);
+    res.json({products, page, pages:Math.ceil(count/numofPages)});
 }));
 
 // @desc    fetch a particular product by its id
@@ -156,5 +171,7 @@ router.post("/:id/reviews", protect, asyncHandler(async(req, res) => {
 
 
 }));
+
+
 
 export default router;
