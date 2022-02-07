@@ -10,8 +10,15 @@ import Products from '../models/Products.js'
 // @desc    fetch all products
 // @route   GET /api/products
 // @access  Public
-router.get("/", asyncHandler(async(req, res) => {
-    const products = await Products.find({});
+router.get("/", asyncHandler(async (req, res) => {
+    // req.query to get anything qfter the ? in the url
+    const keyword = req.query.keyword ? {
+        name: {
+            $regex: req.query.keyword,
+            $options: 'i'
+        }
+    } : {};
+    const products = await Products.find({...keyword});
     // {} to indicate all
 
     res.json(products);
