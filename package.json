@@ -6,11 +6,13 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix ahime-client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node seeders.js",
-    "data:destroy": "node seeders.js -d"
+    "data:destroy": "node seeders.js -d",
+    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false npm install ../ahime-client && npm run build ../ahime-client"
   },
   "repository": {
     "type": "git",
