@@ -1,8 +1,11 @@
 # ahime-server
 Server side of a full stack MERN ecommerce project
 
-https://github.com/YellowFlash2012/ahime-server.git
+<a href="https://github.com/YellowFlash2012/ahime-client.git">Frontend is available here</a>
 
+Project scope: Full stack ecommerce MERN app with admin dashboard and PayPal payment integrated. Users can browse around, add products to cart and then login to checkout via paypal.
+
+Tech stack: node/express + mongodb
 # Key learning points:
 1- learned how to use "concurrently" to run both client and server from a single command line
 2- how to turn nodejs imports into es5 module imports by adding "type":"module" to the package.json file

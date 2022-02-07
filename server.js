@@ -40,9 +40,9 @@ app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // serving the FE with the index.html
 if (process.env.NODE_ENV==='production') {
-    app.use(express.static(path.join(__dirname, '../ahime-client/build')));
+    app.use(express.static(path.join(__dirname, './public')));
 
-    app.get('*', (req,res)=>res.sendFile(path.resolve(__dirname, 'ahime-client', 'build', 'index.html')))
+    app.get('*', (req,res)=>res.sendFile(path.resolve(__dirname, 'public', 'index.html')))
 } else {
     app.get("/", (req, res) => {
         res.send("API is running");

@@ -1,41 +1,44 @@
 {
-  "name": "ahime-server",
-  "version": "1.0.0",
-  "description": "Server side of a full stack MERN ecommerce project",
-  "main": "server.js",
-  "type": "module",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"node server.js",
-    "server": "nodemon server.js",
-    "client": "npm start --prefix ahime-client",
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "data:import": "node seeders.js",
-    "data:destroy": "node seeders.js -d",
-    "heroku-postbuild":"NPM_CONFIG_PRODUCTION=false npm install ../ahime-client && npm run build ../ahime-client"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/YellowFlash2012/ahime-server.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/YellowFlash2012/ahime-server/issues"
-  },
-  "homepage": "https://github.com/YellowFlash2012/ahime-server#readme",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "colors": "^1.4.0",
-    "concurrently": "^7.0.0",
-    "dotenv": "^14.3.2",
-    "express": "^4.17.2",
-    "express-async-handler": "^1.2.0",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.1.8",
-    "morgan": "^1.10.0",
-    "multer": "^1.4.4",
-    "nodemon": "^2.0.15"
-  }
+    "name": "ahime-server",
+    "version": "1.0.0",
+    "description": "Server side of a full stack MERN ecommerce project",
+    "main": "server.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node server.js",
+        "server": "nodemon server.js",
+        "client": "npm start --prefix ahime-client",
+        "dev": "concurrently \"npm run server\" \"npm run client\"",
+        "data:import": "node seeders.js",
+        "data:destroy": "node seeders.js -d"
+        
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/YellowFlash2012/ahime-server.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/YellowFlash2012/ahime-server/issues"
+    },
+    "homepage": "https://github.com/YellowFlash2012/ahime-server#readme",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "colors": "^1.4.0",
+        "concurrently": "^7.0.0",
+        "dotenv": "^14.3.2",
+        "express": "^4.17.2",
+        "express-async-handler": "^1.2.0",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.1.8",
+        "morgan": "^1.10.0",
+        "multer": "^1.4.4",
+        "nodemon": "^2.0.15"
+    },
+    "engines": {
+        "node": "16.13.2"
+    }
 }
