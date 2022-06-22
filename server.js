@@ -10,12 +10,13 @@ import productRoutes from './routes/products.js';
 import userRoutes from './routes/users.js';
 import orderRoutes from './routes/orders.js';
 import uploadRoute from './routes/uploadRoute.js'
+import connectDB from './config/db.js';
 
 config();
 
 const app = express();
 
-// to get an overvie of http verbs involved in a FE req
+// to get an overview of http verbs involved in a FE req
 if (process.env.NODE_ENV === "development") {
     app.use(morgan('dev'))
 }
@@ -33,16 +34,15 @@ app.get('/api/config/paypal', (req, res) => {
     res.send(process.env.PAYPAL_CLIENT_ID);
 });
 
-// to make the upload folder not available
+// to make the upload folder available for client uploads
 const __dirname = path.resolve();
-
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // serving the FE with the index.html
 if (process.env.NODE_ENV==='production') {
-    app.use(express.static(path.join(__dirname, './public')));
+    app.use(express.static(path.join(__dirname, "/ui/build")));
 
-    app.get('*', (req,res)=>res.sendFile(path.resolve(__dirname, 'public', 'index.html')))
+    app.get('*', (req,res)=>res.sendFile(path.resolve(__dirname, 'ui', 'build', 'index.html')))
 } else {
     app.get("/", (req, res) => {
         res.send("API is running");
@@ -59,17 +59,10 @@ const PORT=process.env.PORT || 5000
 
 
 // database connection algo
-mongoose
-    .connect(process.env.MONGO_URI)
-    .then(
-        app.listen(PORT, () => {
-            console.log(
-                `Server running in ${process.env.NODE_ENV} mode | Port ${PORT}`.yellow.bold
-            );
+connectDB()
+app.listen(PORT, () => {
+    console.log(
+        `Server running in ${process.env.NODE_ENV} mode | Port ${PORT}`.yellow.bold
+    );   
+})
 
-            console.log("DB connected!".cyan.underline.bold);
-        })
-    )
-    .catch((err) => {
-        console.log(err.red.bold);
-    });

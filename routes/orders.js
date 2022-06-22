@@ -23,32 +23,6 @@ router.get(
     })
 );
 
-
-// @desc    Get order by ID
-// @route   GET /api/orders/:id
-// @access  Private
-router.get(
-    "/:id",
-    protect,
-    asyncHandler(async (req, res) => {
-
-        // let id = ObjectId(_id).valueOf();
-
-        const order = await Orders.findById(req.params['id']).populate('user', 'name email');
-
-        // console.log(new ObjectId(req.params));
-
-        if (order) {
-            
-            res.json(order);
-        } else {
-            res.status(404);
-            throw new Error('Order not found!');
-        }
-
-    })
-);
-
 // @desc    Update order to paid
 // @route   PUT /api/orders/:id/pay
 // @access  Private
@@ -83,7 +57,7 @@ router.put(
     })
 );
 // @desc    Update order to delivered
-// @route   PUT /api/orders/:id/pay
+// @route   PUT /api/orders/:id/delivered
 // @access  Private
 router.put(
     "/:id/delivered",
@@ -92,8 +66,6 @@ router.put(
     asyncHandler(async (req, res) => {
 
         const order = await Orders.findById(req.params.id);
-
-        // console.log(new ObjectId(req.params));
 
         if (order) {
             
@@ -162,6 +134,30 @@ router.get(
         const orders = await Orders.find({}).populate('user', 'id name');
 
         res.json(orders);
+
+    })
+);
+
+// @desc    Get order by ID
+// @route   GET /api/orders/:id
+// @access  Private
+router.get(
+    "/:id",
+    protect,
+    asyncHandler(async (req, res) => {
+
+        let id = req.params.id;
+        console.log(id, req.params);
+
+        const order = await Orders.findById(id).populate('user', 'name email');
+
+        if (order) {
+            
+            res.json(order);
+        } else {
+            res.status(404);
+            throw new Error('Order not found!');
+        }
 
     })
 );

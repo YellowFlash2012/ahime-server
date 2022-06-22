@@ -1,16 +1,18 @@
 import express from 'express'
 import asyncHandler from 'express-async-handler';
+import apicache from "apicache";
 
 import { admin, protect } from "../middlewares/authMiddleware.js";
+import Products from '../models/Products.js'
 
 const router = express.Router();
+const cache = apicache.middleware;
 
-import Products from '../models/Products.js'
 
 // @desc    get top rated products
 // @route   GET /api/products/top
 // @access  Public
-router.get("/top", asyncHandler(async(req, res) => {
+router.get("/top", cache("60 minutes"), asyncHandler(async(req, res) => {
     const products = await Products.find({}).sort({ rating: -1 }).limit(3);
 
     res.json(products);
@@ -19,40 +21,51 @@ router.get("/top", asyncHandler(async(req, res) => {
 // @desc    fetch all products
 // @route   GET /api/products
 // @access  Public
-router.get("/", asyncHandler(async (req, res) => {
-    // pagination
-    const numofPages = 10;
-    const page = +(req.query.pageNumber) || 1;
+router.get(
+    "/",
+    
+    asyncHandler(async (req, res) => {
+        // pagination
+        const numofPages = 10;
+        const page = +req.query.pageNumber || 1;
 
-    // req.query to get anything qfter the ? in the url - search box functionality
-    const keyword = req.query.keyword ? {
-        name: {
-            $regex: req.query.keyword,
-            $options: 'i'
-        }
-    } : {};
+        // req.query to get anything qfter the ? in the url - search box functionality
+        const keyword = req.query.keyword
+            ? {
+                  name: {
+                      $regex: req.query.keyword,
+                      $options: "i",
+                  },
+              }
+            : {};
 
-    const count = await Products.countDocuments({ ...keyword });
-    const products = await Products.find({ ...keyword }).limit(numofPages).skip(numofPages * (page - 1));
-    // {} to indicate all
+        const count = await Products.countDocuments({ ...keyword });
+        const products = await Products.find({ ...keyword })
+            .limit(numofPages)
+            .skip(numofPages * (page - 1));
+        // {} to indicate all
 
-    res.json({products, page, pages:Math.ceil(count/numofPages)});
-}));
+        res.json({ products, page, pages: Math.ceil(count / numofPages) });
+    })
+);
 
 // @desc    fetch a particular product by its id
 // @route   GET /api/products/:id
 // @access  Public
-router.get("/:id", asyncHandler(async(req, res) => {
-    const product = await Products.findById(req.params.id);
+router.get(
+    "/:id",
+    
+    asyncHandler(async (req, res) => {
+        const product = await Products.findById(req.params.id);
 
-    if (product) {
-        res.json(product);
-    } else {
-        res.status(404)
-        throw new Error('Product not found!')
-    }
-
-}));
+        if (product) {
+            res.json(product);
+        } else {
+            res.status(404);
+            throw new Error("Product not found!");
+        }
+    })
+);
 
 // @desc    delete a product
 // @route   DELETE /api/products/:id
@@ -90,7 +103,6 @@ router.post("/", protect, admin, asyncHandler(async(req, res) => {
     const createdProduct = await product.save();
     res.status(201).json(createdProduct);
 
-
 }));
 
 // @desc    update a product
@@ -119,7 +131,7 @@ router.put("/:id", protect, admin, asyncHandler(async(req, res) => {
         product.countInStock = countInStock;
 
         const updatedProduct = await product.save();
-        res.status(201).json(updatedProduct);
+        res.json(updatedProduct);
     } else {
         res.status(404);
         throw new Error('Product not found')
@@ -143,7 +155,7 @@ router.post("/:id/reviews", protect, asyncHandler(async(req, res) => {
 
         if (alreadyReviewed) {
             res.status(400);
-            throw new Error('Product already reviewed')
+            throw new Error('Product already reviewed!')
         }
 
         const review = {

@@ -1,11 +1,14 @@
 
 import express from "express";
-import mongoose from 'mongoose';
+import apicache from "apicache";
+
 import asyncHandler from "express-async-handler";
 import { admin, protect } from "../middlewares/authMiddleware.js";
 import Users from "../models/Users.js";
 import generateToken from "../utils/generateToken.js";
+
 const router = express.Router();
+const cache = apicache.middleware;
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -53,7 +56,7 @@ router.get("/profile", protect, asyncHandler(async (req, res) => {
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
-router.get("/profile", protect, asyncHandler(async (req, res) => {
+router.put("/profile", protect, asyncHandler(async (req, res) => {
 
     // res.send('Success')
     const user = await Users.findById(req.user._id);
@@ -167,7 +170,7 @@ router.put("/:id", protect, admin, asyncHandler(async (req, res) => {
 // @desc    Get all users
 // @route   GET /api/users
 // @access  Private/Admin Only
-router.get("/", protect, admin, asyncHandler(async (req, res) => {
+router.get("/", cache("60 minutes"), protect, admin, asyncHandler(async (req, res) => {
 
     const users = await Users.find({});
     res.json(users);
@@ -178,12 +181,6 @@ router.get("/", protect, admin, asyncHandler(async (req, res) => {
 // @route   GET /api/users/:id
 // @access  Private/Admin Only
 router.get("/:id", protect, admin, asyncHandler(async (req, res) => {
-
-    // let id = req.params.id;
-
-    // if (id.match(/^[0-9a-fA-F]{24}$/)) {
-    //     next();
-    // }
 
     const user = await Users.findById(req.params.id).select("-password");
 

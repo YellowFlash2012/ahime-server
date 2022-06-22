@@ -8,11 +8,11 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node server.js",
         "server": "nodemon server.js",
-        "client": "npm start --prefix ahime-client",
+        "client": "npm start --prefix ui",
         "dev": "concurrently \"npm run server\" \"npm run client\"",
         "data:import": "node seeders.js",
-        "data:destroy": "node seeders.js -d"
-        
+        "data:destroy": "node seeders.js -d",
+        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix ui && npm run build --prefix ui"
     },
     "repository": {
         "type": "git",
@@ -26,6 +26,7 @@
     },
     "homepage": "https://github.com/YellowFlash2012/ahime-server#readme",
     "dependencies": {
+        "apicache": "^1.6.3",
         "bcryptjs": "^2.4.3",
         "colors": "^1.4.0",
         "concurrently": "^7.0.0",
