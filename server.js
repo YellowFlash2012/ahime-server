@@ -3,9 +3,13 @@ import path from 'path';
 import express from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan'
-import { notFound, errorHandler } from './middlewares/errorMiddlewares.js';
 import colors from 'colors';
 import { config } from 'dotenv';
+
+import pkg from "prerender-node";
+const  prerender  = pkg;
+
+import { notFound, errorHandler } from './middlewares/errorMiddlewares.js';
 import productRoutes from './routes/products.js';
 import userRoutes from './routes/users.js';
 import orderRoutes from './routes/orders.js';
@@ -16,6 +20,12 @@ config();
 
 const app = express();
 
+// prerender config
+app.use(
+    prerender.set("prerenderToken", process.env.prerender_token)
+);
+
+
 // to get an overview of http verbs involved in a FE req
 if (process.env.NODE_ENV === "development") {
     app.use(morgan('dev'))
@@ -23,6 +33,7 @@ if (process.env.NODE_ENV === "development") {
 
 // to accept json data
 app.use(express.json())
+
 
 
 app.use("/api/products", productRoutes);
